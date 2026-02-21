@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Search, Filter, BookOpen, Zap } from 'lucide-react';
-import { db, type TSessao, type TMateria, type TConcurso, formatDuration, formatDate, seedDemoData } from '@/lib/db';
+import { db, type TSessao, type TMateria, type TConcurso, formatDuration, formatDate } from '@/lib/db';
 import { useDebounce } from '@/hooks/useDebounce';
 import PageTransition from '@/components/PageTransition';
 

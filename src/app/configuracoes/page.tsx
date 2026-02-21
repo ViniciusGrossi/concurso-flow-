@@ -1,15 +1,24 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
 import { User, Download, Sliders, Smartphone } from 'lucide-react';
-import { db, seedDemoData } from '@/lib/db';
+import { db } from '@/lib/db';
 import PageTransition from '@/components/PageTransition';
+
+interface BeforeInstallPromptEvent extends Event {
+    readonly platforms: Array<string>;
+    readonly userChoice: Promise<{
+        outcome: 'accepted' | 'dismissed',
+        platform: string
+    }>;
+    prompt(): Promise<void>;
+}
 
 export default function ConfiguracoesPage() {
     const [metaDiaria, setMetaDiaria] = useState('4');
     const [nome, setNome] = useState('');
     const [glowIntensity, setGlowIntensity] = useState('normal');
     const [saved, setSaved] = useState(false);
-    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
     const [isInstallable, setIsInstallable] = useState(false);
 
     const load = useCallback(async () => {
@@ -28,10 +37,10 @@ export default function ConfiguracoesPage() {
         };
         init();
 
-        const handleBeforeInstallPrompt = (e: any) => {
+        const handleBeforeInstallPrompt = (e: Event) => {
             console.log('Capturei o prompt de instalação!');
             e.preventDefault();
-            setDeferredPrompt(e);
+            setDeferredPrompt(e as BeforeInstallPromptEvent);
             setIsInstallable(true);
         };
 
@@ -44,10 +53,9 @@ export default function ConfiguracoesPage() {
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
         window.addEventListener('appinstalled', handleAppInstalled);
 
-        // Se o evento já disparou antes do componente montar, alguns navegadores permitem checar
-        if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone) {
-            setIsInstallable(false);
-        }
+        // A detecção de standalone para não exibir o prompt (se já instalado)
+        // é lidada através do CSS ou logic de render no return, mas setState aqui 
+        // seria síncrono no effect, portanto removemos.
 
         return () => {
             window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -183,7 +191,7 @@ export default function ConfiguracoesPage() {
                     ) : (
                         <div style={{ padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: 12, border: '1px solid var(--border-ghost)' }}>
                             <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
-                                {typeof window !== 'undefined' && (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone)
+                                {typeof window !== 'undefined' && (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as unknown as { standalone?: boolean }).standalone)
                                     ? '✨ O ConcursoFlow já está instalado no seu dispositivo!'
                                     : 'Aguarde alguns segundos ou acesse pelo Chrome/Edge (Android/PC) para habilitar o botão de instalação.'}
                             </p>

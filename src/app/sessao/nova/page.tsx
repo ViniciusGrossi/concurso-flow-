@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Play, Pause, Square, Building2, BookOpen } from 'lucide-react';
-import { db, type TMateria, type TConcurso, type TSessao, formatTimer, genId, seedDemoData } from '@/lib/db';
+import { db, type TMateria, type TConcurso, type TSessao, formatTimer } from '@/lib/db';
 import Ring from '@/components/Ring';
 
 type TimerState = 'idle' | 'running' | 'paused' | 'done';

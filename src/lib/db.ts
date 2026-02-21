@@ -86,7 +86,7 @@ export const db = {
             }));
         },
         where: (field: string) => ({
-            equals: (val: any) => ({
+            equals: (val: unknown) => ({
                 toArray: async () => {
                     const { data, error } = await supabase.from('concursos')
                         .select('*')
@@ -153,8 +153,8 @@ export const db = {
                 ordem: m.ordem
             }));
         },
-        where: (field: string) => ({
-            equals: (val: any) => ({
+        where: (_field: string) => ({
+            equals: (val: unknown) => ({
                 toArray: async () => {
                     const { data, error } = await supabase.from('materias')
                         .select('*')
@@ -217,11 +217,11 @@ export const db = {
                 iniciadoEm: ciclo.iniciado_em,
                 concluidoEm: ciclo.concluido_em,
                 materias: Array.isArray(ciclo.ciclo_materias)
-                    ? (ciclo.ciclo_materias as any[]).sort((a: any, b: any) => a.ordem - b.ordem).map((cm: any) => cm.materia_id)
+                    ? (ciclo.ciclo_materias as { materia_id: string, ordem: number }[]).sort((a, b) => a.ordem - b.ordem).map((cm) => cm.materia_id)
                     : []
             }));
         },
-        orderBy: (field: string) => {
+        orderBy: (_field: string) => {
             const chain = (n?: number) => ({
                 toArray: async () => {
                     const { data, error } = await supabase.from('ciclos')
@@ -240,7 +240,7 @@ export const db = {
                         iniciadoEm: ciclo.iniciado_em,
                         concluidoEm: ciclo.concluido_em,
                         materias: Array.isArray(ciclo.ciclo_materias)
-                            ? (ciclo.ciclo_materias as any[]).sort((a: any, b: any) => a.ordem - b.ordem).map((cm: any) => cm.materia_id)
+                            ? (ciclo.ciclo_materias as { materia_id: string, ordem: number }[]).sort((a, b) => a.ordem - b.ordem).map((cm) => cm.materia_id)
                             : []
                     }));
                 }
@@ -309,7 +309,7 @@ export const db = {
                 iniciadoEm: data.iniciado_em,
                 concluidoEm: data.concluido_em,
                 materias: Array.isArray(data.ciclo_materias)
-                    ? (data.ciclo_materias as any[]).sort((a: any, b: any) => a.ordem - b.ordem).map((cm: any) => cm.materia_id)
+                    ? (data.ciclo_materias as { materia_id: string, ordem: number }[]).sort((a, b) => a.ordem - b.ordem).map((cm) => cm.materia_id)
                     : []
             };
         }
@@ -418,7 +418,7 @@ export const db = {
                 throw error;
             }
         },
-        orderBy: (field: string) => {
+        orderBy: (_field: string) => {
             const chain = (n?: number) => ({
                 toArray: async () => {
                     const { data, error } = await supabase.from('sessoes')
@@ -456,7 +456,7 @@ export const db = {
                 toArray: async () => chain().toArray()
             };
         },
-        where: (field: string) => ({
+        where: (_field: string) => ({
             above: (val: string) => ({
                 toArray: async () => {
                     const { data, error } = await supabase.from('sessoes')

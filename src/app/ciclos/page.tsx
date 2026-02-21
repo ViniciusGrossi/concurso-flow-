@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Plus, Zap, ArrowRight, Type, Building2, Briefcase, Calendar, Hash, Palette } from 'lucide-react';
-import { db, type TCiclo, type TMateria, type TProgressoCiclo, type TConcurso, genId, seedDemoData } from '@/lib/db';
+import { db, type TCiclo, type TMateria, type TProgressoCiclo, type TConcurso } from '@/lib/db';
 import Ring from '@/components/Ring';
 import PageTransition from '@/components/PageTransition';
 

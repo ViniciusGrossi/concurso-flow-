@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { TrendingUp, Flame, Clock, BookOpen, Zap, BarChart3, ArrowUpRight, AlertCircle } from 'lucide-react';
-import { db, type TSessao, type TMateria, type TProgressoCiclo, type TCiclo, formatDuration, seedDemoData } from '@/lib/db';
+import { db, type TSessao, type TMateria, type TProgressoCiclo, type TCiclo, formatDuration } from '@/lib/db';
 import Ring from '@/components/Ring';
 import { DashboardSkeleton } from '@/components/LoadingSkeleton';
 import PageTransition from '@/components/PageTransition';
@@ -76,9 +76,9 @@ export default function DashboardPage() {
             setProgresso(prog);
             setCicloAtual(ciclos[0] || null);
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('[Dashboard] DB error:', err);
-            const errorMsg = err?.message || err?.details || JSON.stringify(err);
+            const errorMsg = (err as Error)?.message || JSON.stringify(err);
             setError(errorMsg);
         } finally {
             setLoading(false);
